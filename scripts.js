@@ -1,12 +1,61 @@
+
 // Importing necessary data from another file
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js'
 
+
+
+
 // Initialize current page and matches (filtered books)
 let page = 1;
-let matches = books
+let matches = books;
+
+// Object to store DOM elements
+/**
+ * @typedef {Object} DomElements
+ * @property {HTMLElement | null} dataListItems - Represents the DOM element for displaying list items.
+ * @property {HTMLElement | null} dataListButton - Represents the DOM element for a button to show more books.
+ * @property {HTMLElement | null} dataSearchOverLay - Represents the DOM element for a search overlay.
+ * @property {HTMLElement | null} dataSettingsOverlay - Represents the DOM element for a settings overlay.
+ */
+const DomElements = {
+    dataListItems: document.querySelector('[data-list-items]'),
+    dataListButton: document.querySelector('[data-list-button]'),
+    dataSearchOverLay: document.querySelector('[data-search-overlay]'),
+    dataSettingsOverlay: document.querySelector('[data-settings-overlay]'),
+};
+
+/**
+ * Function to append UI elements representing book previews
+ * @param {string} image - The URL of the book's image.
+ * @param {string} title - The title of the book.
+ * @param {string} author - The author of the book.
+ * @param {DocumentFragment} appendItems - The document fragment to which the UI element should be appended.
+ * @param {HTMLButtonElement} Element - The button element template to clone for each book.
+ */
+function UIAppender(image, title, author, appendItems, Element) {
+    // Create a new button element for each iteration
+    const newElement = Element.cloneNode(true);
+
+    // Set the inner HTML of the button with book details
+    newElement.innerHTML = `
+        <img
+            class="preview__image"
+            src="${image}"
+        />
+        
+        <div class="preview__info">
+            <h3 class="preview__title">${title}</h3>
+            <div class="preview__author">${authors[author]}</div>
+        </div>
+    `;
+    // Append the button element to the document fragment
+    appendItems.appendChild(newElement); 
+}
+
+// Other JavaScript code continues...
 
 // Create a document fragment to hold book elements
-let CreateDocumentFragment = document.createDocumentFragment()
+let CreateDocumentFragment = document.createDocumentFragment()    //***We create variable to be called overe and over
 
 for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
     const element = document.createElement('button') // Creating a new button element in each iteration
@@ -16,7 +65,7 @@ for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
 }
 
 // Append the document fragment to the list items element in the DOM
-document.querySelector('[data-list-items]').appendChild(CreateDocumentFragment)
+DomElements.dataListItems.appendChild(CreateDocumentFragment)
 
 
 // Add an "All Genres" option
@@ -69,33 +118,33 @@ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').match
 }
 
 // Update the "Show more" button text and state
-document.querySelector('[data-list-button]').innerText = `Show more (${books.length - BOOKS_PER_PAGE})`
-document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0
+DomElements.dataListButton.innerText = `Show more (${books.length - BOOKS_PER_PAGE})`
+DomElements.dataListButton.disabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0
 
-document.querySelector('[data-list-button]').innerHTML = `
+DomElements.dataListButton.innerHTML = `
     <span>Show more</span>
     <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
 `
 
 // Close search overlay when the cancel button is clicked
 document.querySelector('[data-search-cancel]').addEventListener('click', () => {
-    document.querySelector('[data-search-overlay]').open = false
+    DomElements.dataSearchOverLay.open = false
 })
 
 // Close settings overlay when the cancel button is clicked
 document.querySelector('[data-settings-cancel]').addEventListener('click', () => {
-    document.querySelector('[data-settings-overlay]').open = false
+    DomElements.dataSettingsOverlay.open = false
 })
 
 // Open search overlay and focus on the search title input when the search button is clicked
 document.querySelector('[data-header-search]').addEventListener('click', () => {
-    document.querySelector('[data-search-overlay]').open = true 
+    DomElements.dataSearchOverLay.open = true 
     document.querySelector('[data-search-title]').focus()
 })
 
 // Open settings overlay when the settings button is clicked
 document.querySelector('[data-header-settings]').addEventListener('click', () => {
-    document.querySelector('[data-settings-overlay]').open = true 
+    DomElements.dataSettingsOverlay.open = true 
 })
 
 // Close active book details when the close button is clicked
@@ -119,7 +168,7 @@ document.querySelector('[data-settings-form]').addEventListener('submit', (event
     }
     
     // Close the settings overlay
-    document.querySelector('[data-settings-overlay]').open = false
+    DomElements.dataSettingsOverlay.open = false
 })
 
 // Handle search form submission to filter books
@@ -159,7 +208,7 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
     }
 
     // Clear the current book list and display the filtered results
-    document.querySelector('[data-list-items]').innerHTML = ''
+    DomElements.dataListItems.innerHTML = ''
 
     for (const { author, id, image, title } of result.slice(0, BOOKS_PER_PAGE)) {
         const element = document.createElement('button')
@@ -169,21 +218,21 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
         UIAppender(image, title, author, CreateDocumentFragment, element)
     }
 
-    document.querySelector('[data-list-items]').appendChild(CreateDocumentFragment)
-    document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) < 1
+    DomElements.dataListItems.appendChild(CreateDocumentFragment)
+    DomElements.dataListButton.disabled = (matches.length - (page * BOOKS_PER_PAGE)) < 1
 
-    document.querySelector('[data-list-button]').innerHTML = `
+    DomElements.dataListButton.innerHTML = `
         <span>Show more</span>
         <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
     `
 
     // Scroll to the top and close the search overlay
     window.scrollTo({top: 0, behavior: 'smooth'});
-    document.querySelector('[data-search-overlay]').open = false
+    DomElements.dataSearchOverLay.open = false
 })
 
 // Handle "Show more" button click to load more books
-document.querySelector('[data-list-button]').addEventListener('click', () => {
+DomElements.dataListButton.addEventListener('click', () => {
  
 
     // Load the next set of books
@@ -196,12 +245,12 @@ document.querySelector('[data-list-button]').addEventListener('click', () => {
     }
 
     // Append the new books to the list and update the page counter
-    document.querySelector('[data-list-items]').appendChild(fragment)
+    DomElements.dataListItems.appendChild(CreateDocumentFragment)
     page += 1
 })
 
 // Handle book click event to show book details
-document.querySelector('[data-list-items]').addEventListener('click', (event) => {
+DomElements.dataListItems.addEventListener('click', (event) => {
     const pathArray = Array.from(event.path || event.composedPath())
     let active = null
 
@@ -231,32 +280,3 @@ document.querySelector('[data-list-items]').addEventListener('click', (event) =>
         document.querySelector('[data-list-description]').innerText = active.description
     }
 })
-
-
-
-
-
-
-
-//My functions
-
-function UIAppender(image, title, author, appendItems, Element) {
-    // Create a new button element for each iteration
-    const newElement = Element.cloneNode(true);
-
-    // Set the inner HTML of the button with book details
-    newElement.innerHTML = `
-        <img
-            class="preview__image"
-            src="${image}"
-        />
-        
-        <div class="preview__info">
-            <h3 class="preview__title">${title}</h3>
-            <div class="preview__author">${authors[author]}</div>
-        </div>
-    `
-
-    // Append the button element to the document fragment
-    appendItems.appendChild(newElement) // Appending the newly created button element to the document fragment
-}
