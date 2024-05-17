@@ -1,9 +1,19 @@
+/**
+ * @class Preview
+ * @extends HTMLElement
+ *
+ * @classdesc Custom element to display a preview dialog with an image, title, and description.
+ */
 class Preview extends HTMLElement {
+  /**
+   * Creates an instance of Preview.
+   * The constructor initializes the shadow DOM, sets up the template, and attaches event listeners.
+   */
   constructor() {
     super();
     console.log("Preview constructor called");
 
-    const template = document.createElement('template');
+    const template = document.createElement("template");
     template.innerHTML = `
     <link rel="stylesheet" href="./styles.css" />
       <dialog class="overlay">
@@ -23,34 +33,55 @@ class Preview extends HTMLElement {
       <div class="backdrop" style="display: none;"></div>
     `;
 
-    const shadowRoot = this.attachShadow({ mode: 'open' });
+    const shadowRoot = this.attachShadow({ mode: "open" });
     shadowRoot.appendChild(template.content.cloneNode(true));
 
-    this.dialog = shadowRoot.querySelector('dialog');
-    this.backdrop = shadowRoot.querySelector('.backdrop');
-    this.dataListBlur = shadowRoot.querySelector('[data-list-blur]');
-    this.dataListImage = shadowRoot.querySelector('[data-list-image]');
+    /**
+     * @property {HTMLDialogElement} dialog - The dialog element.
+     */
+    this.dialog = shadowRoot.querySelector("dialog");
+
+    /**
+     * @property {HTMLDivElement} backdrop - The backdrop element.
+     */
+    this.backdrop = shadowRoot.querySelector(".backdrop");
+
+    /**
+     * @property {HTMLImageElement} dataListBlur - The blurred image element.
+     */
+    this.dataListBlur = shadowRoot.querySelector("[data-list-blur]");
+
+    /**
+     * @property {HTMLImageElement} dataListImage - The image element.
+     */
+    this.dataListImage = shadowRoot.querySelector("[data-list-image]");
 
     console.log("dataListBlur:", this.dataListBlur);
     console.log("dataListImage:", this.dataListImage);
 
-    const closeButton = shadowRoot.querySelector('[data-list-close]');
+    const closeButton = shadowRoot.querySelector("[data-list-close]");
     if (closeButton) {
-      closeButton.addEventListener('click', () => this.close());
+      closeButton.addEventListener("click", () => this.close());
     }
   }
 
+  /**
+   * Opens the preview dialog and displays the backdrop.
+   */
   open() {
     this.dialog.showModal();
-    this.backdrop.style.display = 'block';
+    this.backdrop.style.display = "block";
   }
 
+  /**
+   * Closes the preview dialog and hides the backdrop.
+   */
   close() {
     this.dialog.close();
-    this.backdrop.style.display = 'none';
+    this.backdrop.style.display = "none";
   }
 }
 
-customElements.define('data-list-active', Preview);
+customElements.define("data-list-active", Preview);
 
 export default Preview;
