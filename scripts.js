@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dataSearchOverLay: document.querySelector('[data-search-overlay]'),
         dataSettingsOverlay: document.querySelector('[data-settings-overlay]'),
         dataListActive: document.querySelector('[data-list-active]'), // Ensure this element is in your HTML
+        closeBtn : document.querySelector('[data-list-close]')
     };
 
 function UIAppender(image, title, author, appendItems, Element) {
@@ -74,11 +75,37 @@ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').match
     document.documentElement.style.setProperty('--color-light', '255, 255, 255');
 }
 
+
+
+// Hide all items after the first 36
+document.querySelector('[data-list-close]').addEventListener('click', () => {
+    // Hide items after the first 36
+
+     // Check if the number of books is less than 37
+     if (matches.length < 37) {
+        document.querySelector('[data-list-close]').style.display = "none";
+        document.querySelector('[data-list-close]').style.disabled = "true";
+    } else {
+        document.querySelector('[data-list-close]').style.display = "block";
+        document.querySelector('[data-list-close]').style.disabled = "false";
+    }
+    const items = DomElements.dataListItems.querySelectorAll('.preview');
+    for (let i = 36; i < items.length; i++) {
+        items[i].style.display = 'none';
+    }
+
+});
+
+
 const showMoreBtnUpdater = ()=> {
 DomElements.dataListButton.innerHTML = `
 <span>Show more</span>
 <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
 `;
+if(DomElements.dataListItems.querySelectorAll('.preview').length<37){
+    DomElements.closeBtn.style.display="none"
+}
+else {  DomElements.closeBtn.style.display="block"}
 }
 
 showMoreBtnUpdater()
@@ -126,9 +153,7 @@ document.querySelector('[data-header-settings]').addEventListener('click', () =>
     DomElements.dataSettingsOverlay.open = true;
 });
 
-document.querySelector('[data-list-close]').addEventListener('click', () => {
-    DomElements.dataListActive.close();
-});
+
 
 document.querySelector('[data-settings-form]').addEventListener('submit', (event) => {
     event.preventDefault();
@@ -252,8 +277,6 @@ DomElements.dataListItems.addEventListener('click', (event) => {
         dataListActive.open();
     }
     
-});
-
-
+})
 
 })
