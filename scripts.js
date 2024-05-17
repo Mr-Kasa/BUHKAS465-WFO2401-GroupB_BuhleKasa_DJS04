@@ -74,6 +74,15 @@ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').match
     document.documentElement.style.setProperty('--color-light', '255, 255, 255');
 }
 
+const showMoreBtnUpdater = ()=> {
+DomElements.dataListButton.innerHTML = `
+<span>Show more</span>
+<span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
+`;
+}
+
+showMoreBtnUpdater()
+
 DomElements.dataListButton.addEventListener('click', () => {
     const startIndex = page * BOOKS_PER_PAGE;
     const endIndex = startIndex + BOOKS_PER_PAGE;
@@ -94,15 +103,10 @@ DomElements.dataListButton.addEventListener('click', () => {
 
         DomElements.dataListButton.disabled = (matches.length - (page * BOOKS_PER_PAGE)) < 1;
 
-        DomElements.dataListButton.innerHTML = `
-            <span>Show more</span>
-            <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
-        `;
+        showMoreBtnUpdater()
 
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    } else {
-        DomElements.dataListButton.disabled = true;
-    }
+    } 
 });
 
 document.querySelector('[data-search-cancel]').addEventListener('click', () => {
