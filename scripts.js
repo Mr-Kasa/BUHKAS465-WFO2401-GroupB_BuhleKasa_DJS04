@@ -74,13 +74,36 @@ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').match
     document.documentElement.style.setProperty('--color-light', '255, 255, 255');
 }
 
-DomElements.dataListButton.innerText = `Show more (${books.length - BOOKS_PER_PAGE})`;
-DomElements.dataListButton.disabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0;
+DomElements.dataListButton.addEventListener('click', () => {
+    const startIndex = page * BOOKS_PER_PAGE;
+    const endIndex = startIndex + BOOKS_PER_PAGE;
+    const newBooks = matches.slice(startIndex, endIndex);
 
-DomElements.dataListButton.innerHTML = `
-    <span>Show more</span>
-    <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
-`;
+    if (newBooks.length > 0) {
+        const newElementsFragment = document.createDocumentFragment();
+
+        for (const { author, id, image, title } of newBooks) {
+            const element = document.createElement('button');
+            element.classList = 'preview';
+            element.setAttribute('data-preview', id);
+            UIAppender(image, title, author, newElementsFragment, element);
+        }
+
+        DomElements.dataListItems.appendChild(newElementsFragment);
+        page++;
+
+        DomElements.dataListButton.disabled = (matches.length - (page * BOOKS_PER_PAGE)) < 1;
+
+        DomElements.dataListButton.innerHTML = `
+            <span>Show more</span>
+            <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
+        `;
+
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    } else {
+        DomElements.dataListButton.disabled = true;
+    }
+});
 
 document.querySelector('[data-search-cancel]').addEventListener('click', () => {
     DomElements.dataSearchOverLay.open = false;
