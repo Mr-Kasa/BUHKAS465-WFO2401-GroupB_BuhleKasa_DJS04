@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     dataSearchOverLay: document.querySelector("[data-search-overlay]"),
     dataSettingsOverlay: document.querySelector("[data-settings-overlay]"),
     dataListActive: document.querySelector("[data-list-active]"), // Ensure this element is in your HTML
-    closeBtn: document.querySelector("[data-list-close]"),
+    showLess: document.querySelector("[data-list-close]"),
   };
 
   /**
@@ -103,24 +103,32 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  /**
-   * Event listener for the close button to hide items after the first 36.
-   */
-  document.querySelector("[data-list-close]").addEventListener("click", () => {
-    // Hide items after the first 36
 
-    if (matches.length < 37) {
-      document.querySelector("[data-list-close]").style.display = "none";
-      document.querySelector("[data-list-close]").disabled = true;
-    } else {
-      document.querySelector("[data-list-close]").style.display = "block";
-      document.querySelector("[data-list-close]").disabled = false;
-    }
-    const items = DomElements.dataListItems.querySelectorAll(".preview");
-    for (let i = 36; i < items.length; i++) {
-      items[i].style.display = "none";
-    }
-  });
+
+  /**
+   * Hides the extra books and shows only the first 36.
+   */
+  function hideExtraBooks() {
+    const previews = DomElements.dataListItems.querySelectorAll(".preview");
+    previews.forEach((preview, index) => {
+      if (index >= 36) {
+        preview.style.display = "none";
+      } else {
+        preview.style.display = "";
+      }
+    });
+  }
+
+  /**
+   * Handles the show less click event.
+   */
+  function closeBtnHandler() {
+    hideExtraBooks();
+    DomElements.showLess.style.display = "none";
+    DomElements.dataListButton.style.display = "block";
+  }
+
+  DomElements.showLess.addEventListener("click", closeBtnHandler);
 
   /**
    * Updates the "Show More" button text based on remaining books.
@@ -134,10 +142,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 : 0
             })</span>
         `;
-    if (DomElements.dataListItems.querySelectorAll(".preview").length < 37) {
-      DomElements.closeBtn.style.display = "none";
+
+    // Show the close button only if there are more than 36 books
+    if (DomElements.dataListItems.querySelectorAll(".preview").length > 36) {
+      DomElements.showLess.style.display = "block";
     } else {
-      DomElements.closeBtn.style.display = "block";
+      DomElements.showLess.style.display = "none";
     }
   };
 
@@ -371,4 +381,8 @@ document.addEventListener("DOMContentLoaded", () => {
       dataListActive.open();
     }
   });
+
+  // Initially hide books after the first 36 and set up the close button visibility
+
+ 
 });
