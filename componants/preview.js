@@ -30,7 +30,7 @@ class Preview extends HTMLElement {
           <button class="overlay__button overlay__button_primary" data-list-close>Close</button>
         </div>
       </dialog>
-      <div class="backdrop" style="display: none;"></div>
+     
     `;
 
     const shadowRoot = this.attachShadow({ mode: "open" });
@@ -46,18 +46,7 @@ class Preview extends HTMLElement {
      */
     this.backdrop = shadowRoot.querySelector(".backdrop");
 
-    /**
-     * @property {HTMLImageElement} dataListBlur - The blurred image element.
-     */
-    this.dataListBlur = shadowRoot.querySelector("[data-list-blur]");
 
-    /**
-     * @property {HTMLImageElement} dataListImage - The image element.
-     */
-    this.dataListImage = shadowRoot.querySelector("[data-list-image]");
-
-    console.log("dataListBlur:", this.dataListBlur);
-    console.log("dataListImage:", this.dataListImage);
 
     const closeButton = shadowRoot.querySelector("[data-list-close]");
     if (closeButton) {
