@@ -25,7 +25,8 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap"
       rel="stylesheet"
     />
-    <script type="module" src="./componants/preview.js"></script>
+    <script type="module" src="./preview.js"></script>
+    <script type="module" src="./theme.js"></script>
     <script type="module" src="./scripts.js"></script>
     <script type="module" src="./data.js"></script>
   </head>
@@ -132,7 +133,9 @@
       </div>
     </dialog>
 
-    <dialog class="overlay" data-settings-overlay>
+
+    <theme-component data-settings-overlay></theme-component>
+    <!-- <dialog class="overlay" data-settings-overlay>
       <div class="overlay__content">
         <form class="overlay__form" data-settings-form id="settings">
           <label class="overlay__field">
@@ -150,7 +153,7 @@
           <button class="overlay__button overlay__button_primary" type="submit" form="settings">Save</button>
         </div>
       </div>
-    </dialog>
+    </dialog> -->
     
     <div class="backdrop"></div>
   </body>
