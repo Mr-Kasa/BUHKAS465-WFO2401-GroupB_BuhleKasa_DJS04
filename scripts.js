@@ -4,6 +4,9 @@ import { books, authors, genres, BOOKS_PER_PAGE } from "./data.js";
 let page = 1;
 let matches = books;
 
+/**
+ * Initializes the application when the DOM is fully loaded.
+ */
 document.addEventListener("DOMContentLoaded", () => {
   const DomElements = {
     dataListItems: document.querySelector("[data-list-items]"),
@@ -14,6 +17,14 @@ document.addEventListener("DOMContentLoaded", () => {
     showLess: document.querySelector("[data-list-close]"),
   };
 
+  /**
+   * Appends a new UI element to the specified container.
+   * @param {string} image - The image URL of the book.
+   * @param {string} title - The title of the book.
+   * @param {string} author - The author ID of the book.
+   * @param {HTMLElement} appendItems - The container to append the new element to.
+   * @param {HTMLElement} Element - The base element to clone and modify.
+   */
   function UIAppender(image, title, author, appendItems, Element) {
     const newElement = Element.cloneNode(true);
     newElement.innerHTML = `
@@ -67,6 +78,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelector("[data-search-authors]").appendChild(CreateDocumentFragment);
 
+  /**
+   * Hides extra books that exceed a certain limit.
+   */
   function hideExtraBooks() {
     const previews = DomElements.dataListItems.querySelectorAll(".preview");
     previews.forEach((preview, index) => {
@@ -78,6 +92,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  /**
+   * Handles the close button click event to hide extra books and update UI elements.
+   */
   function closeBtnHandler() {
     hideExtraBooks();
     DomElements.showLess.style.display = "none";
@@ -86,6 +103,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   DomElements.showLess.addEventListener("click", closeBtnHandler);
 
+  /**
+   * Updates the "Show more" button and its visibility.
+   */
   const showMoreBtnUpdater = () => {
     DomElements.dataListButton.innerHTML = `
       <span>Show more</span>
@@ -218,3 +238,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   hideExtraBooks();
 });
+

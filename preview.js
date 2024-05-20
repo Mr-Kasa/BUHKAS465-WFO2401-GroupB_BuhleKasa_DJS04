@@ -48,6 +48,12 @@ class Preview extends HTMLElement {
 
   /**
    * Opens the preview dialog and displays the backdrop.
+   * @param {Object} data - The data to display in the preview.
+   * @param {string} data.image - The URL of the image to display.
+   * @param {string} data.title - The title of the preview.
+   * @param {string} data.author - The author of the preview content.
+   * @param {string} data.published - The published date of the preview content.
+   * @param {string} data.description - The description of the preview content.
    */
   open(data) {
     const { image, title, author, published, description } = data;
@@ -72,4 +78,5 @@ class Preview extends HTMLElement {
 customElements.define("data-list-active", Preview);
 
 export default Preview;
+
 

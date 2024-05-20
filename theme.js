@@ -1,4 +1,14 @@
+/**
+ * A custom web component that provides a theme selection overlay.
+ * 
+ * @class
+ * @extends {HTMLElement}
+ */
 class Theme extends HTMLElement {
+  /**
+   * Creates an instance of the Theme component.
+   * The constructor sets up the shadow DOM and event listeners.
+   */
   constructor() {
     super();
     console.log("Theme constructor called");
@@ -186,6 +196,11 @@ class Theme extends HTMLElement {
     this.applyInitialTheme();
   }
 
+  /**
+   * Applies the initial theme based on the user's system preference.
+   * Sets the theme select value and updates CSS variables.
+   * @private
+   */
   applyInitialTheme() {
     const themeSelect = this.shadowRoot.querySelector('[data-settings-theme]');
     if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
@@ -199,6 +214,9 @@ class Theme extends HTMLElement {
     }
   }
 
+  /**
+   * Closes the theme settings dialog.
+   */
   close() {
     this.dialog.close();
   }
@@ -207,3 +225,4 @@ class Theme extends HTMLElement {
 customElements.define('theme-component', Theme);
 
 export default Theme;
+
